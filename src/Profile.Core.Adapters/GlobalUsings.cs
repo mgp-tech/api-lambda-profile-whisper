@@ -1,0 +1,1 @@
+global using Profile.Core.Domain.Entity;

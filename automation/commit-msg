@@ -1,0 +1,13 @@
+#!/bin/sh
+RED='\033[0;31m'
+NC='\033[0m'
+
+if ! head -1 "$1" | grep -qE "^(feat|fix|ci|chore|docs|test|style|refactor|merge)(\(.+?\))?: .{1,}$"; then
+    echo -e "${RED}Aborting commit. Your commit message is invalid.${NC}"
+    exit 1
+fi
+
+if ! head -1 "$1" | grep -qE "^.{1,80}$"; then
+    echo -e "${RED}Aborting commit. Your commit message is too long.${NC}"
+    exit 1
+fi

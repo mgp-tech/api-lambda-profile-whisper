@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AWSSDK.Core" Version="3.7.204.1"/>
+        <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7"/>
+        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.201.38"/>
+        <PackageReference Include="Bogus" Version="34.0.2"/>
+        <PackageReference Include="FluentAssertions" Version="6.12.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.12"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1"/>
+        <PackageReference Include="Moq" Version="4.20.69"/>
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0"/>
+        <PackageReference Include="xunit" Version="2.4.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="3.2.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\Profile.Core.IoC\Profile.Core.IoC.csproj"/>
+        <ProjectReference Include="..\Profile.Infra.Context\Profile.Infra.Context.csproj"/>
+        <ProjectReference Include="..\Profile.Infra.DatabaseCredential\Profile.Infra.DatabaseCredential.csproj"/>
+        <ProjectReference Include="..\Profile.Infra.Repository\Profile.Infra.Repository.csproj"/>
+        <ProjectReference Include="..\Profile.Infra.Secret\Profile.Infra.Secret.csproj"/>
+        <ProjectReference Include="..\Profile.Presentation.Function\Profile.Presentation.Function.csproj"/>
+    </ItemGroup>
+
+
+    <Target AfterTargets="AfterBuild" Name="Del">
+        <Message Text="Delete hook to automation git" Importance="high"/>
+        <ItemGroup>
+            <FilesToClean Include="..\..\.git\hooks\**"/>
+            <FolderToClean Include="..\..\.git\hooks"/>
+        </ItemGroup>
+        <Delete Files="@(FilesToClean)"/>
+        <RemoveDir Directories="@(FolderToClean)"/>
+    </Target>
+
+    <Target Name="CopyFiles" AfterTargets="AfterBuild">
+        <Message Text="Insert automation git" Importance="high"/>
+        <ItemGroup>
+            <Automation Include="..\..\automation\**"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(Automation)" DestinationFolder="..\..\.git\hooks\"/>
+    </Target>
+</Project>
